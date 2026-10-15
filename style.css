@@ -1639,3 +1639,10 @@ main,
 .profile-frame {
     animation: none;
 }
+html {
+  scroll-behavior: smooth;
+}
+
+section {
+  scroll-margin-top: 90px;
+}
