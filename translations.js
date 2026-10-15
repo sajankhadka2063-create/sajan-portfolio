@@ -153,7 +153,7 @@ const translations = {
     namePlaceholder: "Your name",
     subjectPlaceholder: "What is this about?",
     messagePlaceholder: "Write your message...",
-    sendMessage: "Compose Email",
+    sendMessage: "Send Message",
 
     formNote:
       "This opens your email app with the message prepared. You must send it from your email app.",

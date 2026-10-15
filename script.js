@@ -414,50 +414,73 @@ if (profilePhoto) {
 
 /* ========== 10. CONTACT FORM ========== */
 
+
+/* ========== CONTACT FORM: FORMSPREE ========== */
+
 if (contactForm) {
-  contactForm.addEventListener(
-    "submit",
-    function(event) {
+  contactForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
 
-      event.preventDefault();
-
-      if (!contactForm.reportValidity()) {
-        return;
-      }
-
-      const name =
-        document.getElementById("contactName").value.trim();
-
-      const email =
-        document.getElementById("contactEmail").value.trim();
-
-      const subject =
-        document.getElementById("contactSubject").value.trim();
-
-      const message =
-        document.getElementById("contactMessage").value.trim();
-
-      if (!name || !email || !subject || !message) {
-        return;
-      }
-
-      const emailBody =
-        `Name: ${name}\n` +
-        `Email: ${email}\n\n` +
-        `Message:\n${message}`;
-
-      const mailtoLink =
-        "mailto:sajankhadka2426@gmail.com" +
-        "?subject=" + encodeURIComponent(subject) +
-        "&body=" + encodeURIComponent(emailBody);
-
-      // Opens the visitor's configured email app.
-      // It does not automatically send an email.
-      window.location.href = mailtoLink;
+    if (!contactForm.reportValidity()) {
+      return;
     }
-  );
-}
 
+    const submitButton = contactForm.querySelector(
+      'button[type="submit"]'
+    );
+    const statusMessage = contactForm.querySelector(".form-note");
+
+    const originalButtonText = submitButton
+      ? submitButton.innerHTML
+      : "";
+
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.innerHTML =
+        'Sending... <i class="fa-solid fa-spinner fa-spin"></i>';
+    }
+
+    if (statusMessage) {
+      statusMessage.textContent = "Sending your message...";
+    }
+
+    try {
+      const response = await fetch(
+        "https://formspree.io/f/mjygjkee",
+        {
+          method: "POST",
+          body: new FormData(contactForm),
+          headers: {
+            Accept: "application/json"
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Message submission failed.");
+      }
+
+      contactForm.reset();
+
+      if (statusMessage) {
+        statusMessage.textContent =
+          "Thank you! Your message was submitted successfully.";
+      }
+    } catch (error) {
+      if (statusMessage) {
+        statusMessage.textContent =
+          "Sorry, your message could not be sent. Please try again.";
+      }
+
+      console.error("Contact form error:", error);
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.innerHTML = originalButtonText;
+      }
+    }
+  });
+}
 
 /* ========== 11. FOOTER YEAR ========== */
 
